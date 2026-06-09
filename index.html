@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para ti, Mimi </title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ffe4f0 0%, #ffd6e8 50%, #ffe9f3 100%);
+      font-family: 'Dancing Script', cursive;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: clamp(1rem, 4vw, 2.5rem) clamp(0.8rem, 4vw, 1.5rem) 4rem;
+      min-height: 100vh;
+    }
+
+    .titulo {
+      font-size: clamp(1.4rem, 5vw, 2.2rem);
+      color: #c0396a;
+      text-align: center;
+      margin-bottom: 0.6rem;
+      animation: fadeIn 1s ease;
+    }
+
+    .nombre { color: #e0527a; }
+
+    .texto-disculpa {
+      font-size: clamp(0.95rem, 3.5vw, 1.15rem);
+      color: #7a2040;
+      text-align: center;
+      max-width: min(500px, 90vw);
+      line-height: 1.9;
+      margin-bottom: clamp(1.2rem, 4vw, 2rem);
+      animation: fadeIn 1.5s ease;
+    }
+
+    .flores-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: clamp(0.6rem, 2.5vw, 1rem);
+      max-width: min(580px, 95vw);
+      margin-bottom: clamp(1.5rem, 5vw, 2.5rem);
+      animation: fadeIn 2s ease;
+    }
+
+    .flor {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      animation: floatFlor 3s ease-in-out infinite;
+      width: clamp(70px, 18vw, 90px);
+    }
+
+    .flor:nth-child(2) { animation-delay: 0.3s; }
+    .flor:nth-child(3) { animation-delay: 0.6s; }
+    .flor:nth-child(4) { animation-delay: 0.9s; }
+    .flor:nth-child(5) { animation-delay: 1.2s; }
+    .flor:nth-child(6) { animation-delay: 1.5s; }
+
+    .flor-svg {
+      width: clamp(55px, 14vw, 75px);
+      height: clamp(55px, 14vw, 75px);
+    }
+
+    .flor-label {
+      font-size: clamp(0.7rem, 2.5vw, 0.88rem);
+      color: #b03060;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .pregunta-section { text-align: center; animation: fadeIn 2.5s ease; }
+
+    .pregunta-texto {
+      font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+      color: #c0396a;
+      margin-bottom: 1.5rem;
+    }
+
+    .botones-wrapper {
+      position: relative;
+      width: min(340px, 90vw);
+      height: 80px;
+      margin: 0 auto;
+    }
+
+    .btn-si {
+      background: #e8527a;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: clamp(10px,2.5vw,12px) clamp(20px,5vw,32px);
+      font-size: clamp(1rem, 3.5vw, 1.2rem);
+      font-family: 'Dancing Script', cursive;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(232,82,122,0.3);
+      transition: transform 0.2s, background 0.2s;
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .btn-si:hover { background: #d44070; transform: translateY(-50%) scale(1.05); }
+
+    .btn-no {
+      background: white;
+      color: #e8527a;
+      border: 2px solid #e8527a;
+      border-radius: 50px;
+      padding: clamp(10px,2.5vw,12px) clamp(18px,4vw,28px);
+      font-size: clamp(1rem, 3.5vw, 1.2rem);
+      font-family: 'Dancing Script', cursive;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: left 0.15s ease, top 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .cancion-section {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .cancion-section.visible {
+      display: flex;
+      animation: popIn 0.6s cubic-bezier(.36,.07,.19,.97);
+    }
+
+    .cancion-corazon {
+      font-size: clamp(2.5rem, 10vw, 4rem);
+      animation: pulseHeart 0.8s ease-in-out infinite alternate;
+    }
+
+    .cancion-texto {
+      font-size: clamp(1rem, 4vw, 1.3rem);
+      color: #c0396a;
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .reproductor {
+      background: white;
+      border-radius: 20px;
+      padding: clamp(1rem,3vw,1.2rem) clamp(1.2rem,4vw,2rem);
+      box-shadow: 0 4px 20px rgba(232,82,122,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      width: min(300px, 85vw);
+    }
+
+    .cancion-info { text-align: center; }
+
+    .song-title {
+      font-size: clamp(1rem, 3.5vw, 1.15rem);
+      color: #c0396a;
+      font-weight: 600;
+    }
+
+    .song-artist {
+      font-size: clamp(0.8rem, 2.8vw, 0.95rem);
+      color: #b07080;
+    }
+
+    .play-btn {
+      width: clamp(42px,10vw,52px);
+      height: clamp(42px,10vw,52px);
+      border-radius: 50%;
+      background: #e8527a;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: clamp(1.1rem,3.5vw,1.4rem);
+      transition: transform 0.2s;
+      text-decoration: none;
+    }
+
+    .play-btn:hover { transform: scale(1.1); }
+
+    .prog-bar {
+      width: 100%;
+      height: 4px;
+      background: #fcd0e0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .prog-fill {
+      height: 100%;
+      background: #e8527a;
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .nota-spotify {
+      font-size: clamp(0.75rem, 2.5vw, 0.88rem);
+      color: #b07080;
+      text-align: center;
+    }
+
+    .petalos {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 999;
+      overflow: hidden;
+    }
+
+    .petalo {
+      position: absolute;
+      top: -30px;
+      animation: caerPetalo linear infinite;
+      opacity: 0.85;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes floatFlor {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50%       { transform: translateY(-8px) rotate(2deg); }
+    }
+    @keyframes popIn {
+      0%   { opacity: 0; transform: scale(0.5); }
+      80%  { transform: scale(1.05); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes pulseHeart {
+      from { transform: scale(1); }
+      to   { transform: scale(1.15); }
+    }
+    @keyframes caerPetalo {
+      0%   { transform: translateY(-30px) rotate(0deg);   opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div id="petalos" class="petalos"></div>
+
+  <h1 class="titulo"> Para ti, <span class="nombre" id="nombre-persona">Mimi</span>...</h1>
+
+  <p class="texto-disculpa">
+    A veces las palabras no alcanzan para decir cuánto lo siento.<br>
+    Pero quiero que sepas que me arrepiento de verdad,<br>
+    y que eres una parte muy importante para mi.<br>
+    Perdóname, por favor. Se que te gustan las flores<br>
+    y aunque no sean reales, representan lo que<br>
+    significas para mi :)
+  </p>
+
+  <div class="flores-container" id="flores"></div>
+
+  <div class="pregunta-section" id="pregunta-section">
+    <p class="pregunta-texto">¿Me perdonas? </p>
+    <div class="botones-wrapper" id="botones-wrapper">
+      <button class="btn-si" onclick="dijoSi()">Sí </button>
+      <button class="btn-no" id="btn-no" onclick="moverNo()">No </button>
+    </div>
+  </div>
+
+  <div class="cancion-section" id="cancion-section">
+    <div class="cancion-corazon">🌹</div>
+    <p class="cancion-texto">¡Gracias por perdonarme! <br>Esta canción es para ti...</p>
+    <div class="reproductor">
+      <div class="cancion-info">
+        <div class="song-title" id="song-title">🎵 NOMBRE DE LA CANCIÓN</div>
+        <div class="song-artist" id="song-artist">Artista</div>
+      </div>
+      <!-- El botón abre el link de la canción -->
+      <button class="play-btn" id="play-btn" onclick="abrirCancion()">▶</button>
+      <div class="prog-bar">
+        <div class="prog-fill" id="prog-fill"></div>
+      </div>
+    </div>
+   
+  </div>
+</div>
+
+<script>
+  // ============================================================
+  //  CONFIGURA AQUÍ 👇
+  // ============================================================
+  const NOMBRE          = "Mimi";
+  const CANCION_TITULO  = "Sin Ti";   // ← Título de la canción
+  const CANCION_ARTISTA = "Antonio Cartagena";                 // ← Nombre del artista
+  const CANCION_LINK    = "https://open.spotify.com/search/sin%20ti%20antonio%20cartagena"; // ← Pega aquí el link de Spotify o YouTube
+
+  const cualidades = [
+    { texto: "Eres increíblemente talentosa", color: "#e8527a", centro: "#fff"    },
+    { texto: "Tienes un corazón enorme",      color: "#c04080", centro: "#ffe0ec" },
+    { texto: "Tus ojos son hermosos",         color: "#e06090", centro: "#fff"    },
+    { texto: "Eres súper inteligente",        color: "#d04878", centro: "#ffd6e8" },
+    { texto: "Me haces mejor persona",        color: "#b83060", centro: "#fff"    },
+    { texto: "Eres una de mis personas favoritas", color: "#f06898", centro: "#ffe8f2" },
+  ];
+  // ============================================================
+
+  document.getElementById('nombre-persona').textContent = NOMBRE;
+  document.getElementById('song-title').textContent     = '🎵 ' + CANCION_TITULO;
+  document.getElementById('song-artist').textContent    = CANCION_ARTISTA;
+
+  function crearFlor(color, centro) {
+    const ns  = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 100 100');
+    svg.setAttribute('class', 'flor-svg');
+    [0, 60, 120, 180, 240, 300].forEach(ang => {
+      const rad = ang * Math.PI / 180;
+      const cx  = 50 + 20 * Math.cos(rad);
+      const cy  = 50 + 20 * Math.sin(rad);
+      const el  = document.createElementNS(ns, 'ellipse');
+      el.setAttribute('cx', cx); el.setAttribute('cy', cy);
+      el.setAttribute('rx', 13); el.setAttribute('ry', 9);
+      el.setAttribute('fill', color); el.setAttribute('opacity', '0.85');
+      el.setAttribute('transform', `rotate(${ang},${cx},${cy})`);
+      svg.appendChild(el);
+    });
+    const cen = document.createElementNS(ns, 'circle');
+    cen.setAttribute('cx', 50); cen.setAttribute('cy', 50); cen.setAttribute('r', 14);
+    cen.setAttribute('fill', centro); cen.setAttribute('stroke', color); cen.setAttribute('stroke-width', 2);
+    svg.appendChild(cen);
+    const tallo = document.createElementNS(ns, 'line');
+    tallo.setAttribute('x1', 50); tallo.setAttribute('y1', 70);
+    tallo.setAttribute('x2', 50); tallo.setAttribute('y2', 95);
+    tallo.setAttribute('stroke', '#5a9e5a'); tallo.setAttribute('stroke-width', 3);
+    svg.appendChild(tallo);
+    return svg;
+  }
+
+  const contenedor = document.getElementById('flores');
+  cualidades.forEach(q => {
+    const div = document.createElement('div');
+    div.className = 'flor';
+    div.appendChild(crearFlor(q.color, q.centro));
+    const lbl = document.createElement('div');
+    lbl.className = 'flor-label';
+    lbl.textContent = q.texto;
+    div.appendChild(lbl);
+    contenedor.appendChild(div);
+  });
+
+  let noClicks = 0;
+  function moverNo() {
+    noClicks++;
+    const btn     = document.getElementById('btn-no');
+    const wrapper = document.getElementById('botones-wrapper');
+    const maxX    = wrapper.offsetWidth  - btn.offsetWidth  - 10;
+    const maxY    = wrapper.offsetHeight - btn.offsetHeight - 10;
+    btn.style.left      = Math.floor(Math.random() * maxX) + 'px';
+    btn.style.top       = Math.floor(Math.random() * Math.max(maxY, 20)) + 'px';
+    btn.style.transform = 'none';
+    btn.style.right     = 'auto';
+    if (noClicks >= 5) btn.style.display = 'none';
+  }
+
+  function dijoSi() {
+    document.getElementById('pregunta-section').style.display = 'none';
+    document.getElementById('cancion-section').classList.add('visible');
+    lanzarPetalos();
+  }
+
+  /* Abre el link y anima la barra */
+  let playing     = false;
+  let progInterval = null;
+  let progValue   = 0;
+
+  function abrirCancion() {
+    window.open(CANCION_LINK, '_blank');
+    if (!playing) {
+      playing = true;
+      document.getElementById('play-btn').textContent = '⏸';
+      const fill = document.getElementById('prog-fill');
+      progInterval = setInterval(() => {
+        progValue += 0.056;
+        if (progValue >= 100) {
+          progValue = 0;
+          clearInterval(progInterval);
+          playing = false;
+          document.getElementById('play-btn').textContent = '▶';
+        }
+        fill.style.width = progValue + '%';
+      }, 100);
+    } else {
+      clearInterval(progInterval);
+      playing = false;
+      document.getElementById('play-btn').textContent = '▶';
+    }
+  }
+
+  function lanzarPetalos() {
+    const cont   = document.getElementById('petalos');
+    const emojis = ['🌸','🌹','🌷','✨'];
+    for (let i = 0; i < 28; i++) {
+      const p = document.createElement('div');
+      p.className                = 'petalo';
+      p.textContent              = emojis[Math.floor(Math.random() * emojis.length)];
+      p.style.left               = Math.random() * 100 + 'vw';
+      p.style.fontSize           = (0.9 + Math.random() * 1.2) + 'rem';
+      p.style.animationDuration  = (3 + Math.random() * 4) + 's';
+      p.style.animationDelay     = (Math.random() * 3) + 's';
+      cont.appendChild(p);
+    }
+  }
+</script>
+</body>
+</html>
